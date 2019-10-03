@@ -7,14 +7,29 @@ axios
   .get('https://api.github.com/users/AMC-ai')
   //do this with data typically called response bc thats what we're looking for
   .then(response => {
-    console.log(response);
-    //acces data, message value and loop over it
-    response.data.message.forEach(item => {
-      //create element out of data using constructor function
-      const newFollower = followerCard(item);
-      //append new created element to html element
-      entryPoint.appendChild(newFollower);
-    });
+    // console.log(response);
+    followerCard(response.data);
+  })
+  //catch errors, debuging tool
+  .catch(error => {
+    console.log("The data was not returned", error);
+  });
+
+axios
+  //get data from api
+  .get('https://api.github.com/users/AMC-ai/followers')
+  //do this with data typically called response bc thats what we're looking for
+  .then(response => {
+    // console.log(response);
+    // for (const githubUser of response.data) {
+    //   console.log(githubUser)
+    //   followerCard(githubUser);
+    // }
+    response.data.forEach(async (githubUser) => {
+      const userResponse = await axios.get(githubUser.url);
+      console.log(userResponse)
+      followerCard(userResponse.data);
+    })
   })
   //catch errors, debuging tool
   .catch(error => {
@@ -54,7 +69,7 @@ const followersArray = [];
     <h3 class="name">{users name}</h3>
     <p class="username">{users user name}</p>
     <p>Location: {users location}</p>
-    <p>Profile:  
+    <p>Profile:
       <a href={address to users github page}>{address to users github page}</a>
     </p>
     <p>Followers: {users followers count}</p>
@@ -64,20 +79,20 @@ const followersArray = [];
 </div>
 
 */
+// returns html div 
 function followerCard(gitData) {
   //create elements
-  const
-    card = document.createElement('div'),
-    userImg = document.createElement('img')
-  cardInfo = document.createElement('div'),
-    userName = document.createElement('h3'),
-    followerName = document.createElement('p'),
-    location = document.createElement('p'),
-    profile = document.createElement('p'),
-    profileLink = document.createElement('a'),
-    followers = document.createElement('p'),
-    following = document.createElement('p'),
-    userBio = document.createElement('p');
+  const card = document.createElement('div');
+  const userImg = document.createElement('img');
+  const cardInfo = document.createElement('div');
+  const userName = document.createElement('h3');
+  const followerName = document.createElement('p');
+  const location = document.createElement('p');
+  const profile = document.createElement('p');
+  const profileLink = document.createElement('a');
+  const followers = document.createElement('p');
+  const following = document.createElement('p');
+  const userBio = document.createElement('p');
 
   //setup structure of elements
   card.appendChild(userImg);
@@ -91,24 +106,35 @@ function followerCard(gitData) {
   cardInfo.appendChild(userBio);
 
   //set class names
-  card.classList.add('card')
-  cardInfo.classList.add('card-info')
-  userName.classList.add('name')
-  followerName.classList.add('username')
+  card.classList.add('card');
+  cardInfo.classList.add('card-info');
+  userName.classList.add('name');
+  followerName.classList.add('username');
 
   //set text content
-  userImg.src = avatar_url
-  userName.textContent = name
-  followerName.textContent = followers_url
-  location.textContent = location
-  profileLink.textContent = html_url
-  followers.textContent = followers
-  following.textContent = following
-  userBio.textContent = bio
+  userImg.src = gitData.avatar_url;
+  userName.textContent = gitData.name;
+  followerName.textContent = gitData.followers_url;
+  location.textContent = gitData.location;
+  profileLink.textContent = gitData.html_url;
+  followers.textContent = gitData.followers;
+  following.textContent = gitData.following;
+  userBio.textContent = gitData.bio;
+  console.log(gitData);
+  console.log(card);
 
+  document.getElementsByClassName('cards')[0].appendChild(card);
 
-  return card
+  // return card;
 }
+
+// panelData.forEach(data => {
+//   console.log('creating panel', data.title)
+//   accordion.appendChild(createPanel(data.title, data.content))
+// })
+
+
+
 /* List of LS Instructors Github username's:
   tetondan
   dustinmyers
