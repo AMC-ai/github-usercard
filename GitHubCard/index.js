@@ -2,7 +2,26 @@
            (replacing the palceholder with your Github name):
            https://api.github.com/users/<your name>
 */
+axios
+  //get data from api
+  .get('https://api.github.com/users/AMC-ai')
+  //do this with data typically called response bc thats what we're looking for
+  .then(response => {
+    console.log(response);
+    //acces data, message value and loop over it
+    response.data.message.forEach(item => {
+      //create element out of data using constructor function
+      const newFollower = followerCard(item);
+      //append new created element to html element
+      entryPoint.appendChild(newFollower);
+    });
+  })
+  //catch errors, debuging tool
+  .catch(error => {
+    console.log("The data was not returned", error);
+  });
 
+const entryPoint = document.querySelector('cards');
 /* Step 2: Inspect and study the data coming back, this is YOUR 
    github info! You will need to understand the structure of this 
    data in order to use it to build your component function 
@@ -45,8 +64,52 @@ const followersArray = [];
 </div>
 
 */
+function followerCard(gitData) {
+  //create elements
+  const
+    card = document.createElement('div'),
+    userImg = document.createElement('img')
+  cardInfo = document.createElement('div'),
+    userName = document.createElement('h3'),
+    followerName = document.createElement('p'),
+    location = document.createElement('p'),
+    profile = document.createElement('p'),
+    profileLink = document.createElement('a'),
+    followers = document.createElement('p'),
+    following = document.createElement('p'),
+    userBio = document.createElement('p');
 
-/* List of LS Instructors Github username's: 
+  //setup structure of elements
+  card.appendChild(userImg);
+  card.appendChild(cardInfo);
+  cardInfo.appendChild(userName);
+  cardInfo.appendChild(followerName);
+  cardInfo.appendChild(location);
+  cardInfo.appendChild(profile);
+  profile.appendChild(profileLink);
+  cardInfo.appendChild(followers);
+  cardInfo.appendChild(userBio);
+
+  //set class names
+  card.classList.add('card')
+  cardInfo.classList.add('card-info')
+  userName.classList.add('name')
+  followerName.classList.add('username')
+
+  //set text content
+  userImg.src = avatar_url
+  userName.textContent = name
+  followerName.textContent = followers_url
+  location.textContent = location
+  profileLink.textContent = html_url
+  followers.textContent = followers
+  following.textContent = following
+  userBio.textContent = bio
+
+
+  return card
+}
+/* List of LS Instructors Github username's:
   tetondan
   dustinmyers
   justsml
